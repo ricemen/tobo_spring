@@ -5,24 +5,27 @@ import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import springbook.user.domain.User;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="/applicationContext.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations="/applicationContext.xml")
 public class UserDaoTest {
 	
 //	@Autowired
 //	private ApplicationContext context;
 	
-	@Autowired
+//	@Autowired
 	private UserDao dao;
 	
 	User user1;
@@ -31,25 +34,29 @@ public class UserDaoTest {
 	
 	@Before
 	public void setUp() {
+
+		dao = new UserDao();
+		DataSource dataSource = new SingleConnectionDataSource("jdbc:h2:tcp://localhost/~/testdb", "sa", "", true);
+		dao.setDataSource(dataSource);
 		
 //		System.out.println(this.context);
 //		System.out.println(this);
 ////		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
 //		this.dao = context.getBean("userDao", UserDao.class);
 		
-		user1 = new User("wonseok1", "Á¶¿ø¼®1", "4321");
-		user2 = new User("wonseok2", "Á¶¿ø¼®2", "4321");
-		user3 = new User("wonseok3", "Á¶¿ø¼®3", "4321");
+		user1 = new User("wonseok1", "ì¡°ì›ì„1", "4321");
+		user2 = new User("wonseok2", "ì¡°ì›ì„2", "4321");
+		user3 = new User("wonseok3", "ì¡°ì›ì„3", "4321");
 	}
 	
 	@Test
 	public void addAndGet() throws SQLException {
-		// XML ¼³Á¤ ÆÄÀÏ ÀÌ¿ë
+		// XML ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½
 //		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
 //		UserDao dao = context.getBean("userDao", UserDao.class);
 		
-		User user1 = new User("ricemen", "À±¼­¾Æºü", "1234");
-		User user2 = new User("ricemen2", "À±¼­¾Æºü2", "1234");
+		User user1 = new User("ricemen", "ì¡°ì›ì„", "1234");
+		User user2 = new User("ricemen2", "ì¡°ì›ì„2", "1234");
 		
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));
@@ -71,13 +78,13 @@ public class UserDaoTest {
 
 	@Test
 	public void count() throws SQLException {
-		// XML ¼³Á¤ ÆÄÀÏ ÀÌ¿ë
+		// XML ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½
 //		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
 //		UserDao dao = context.getBean("userDao", UserDao.class);
 
-		User user1 = new User("wonseok1", "Á¶¿ø¼®1", "4321");
-		User user2 = new User("wonseok2", "Á¶¿ø¼®2", "4321");
-		User user3 = new User("wonseok3", "Á¶¿ø¼®3", "4321");
+		User user1 = new User("wonseok1", "ì¡°ì›ì„1", "4321");
+		User user2 = new User("wonseok2", "ì¡°ì›ì„2", "4321");
+		User user3 = new User("wonseok3", "ì¡°ì›ì„3", "4321");
 		
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));

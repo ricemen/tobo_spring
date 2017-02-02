@@ -3,7 +3,6 @@ package springbook.user.dao;
 import java.sql.SQLException;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import springbook.user.domain.User;
@@ -16,11 +15,11 @@ public class RunDao {
 //		UserDao dao = new UserDao(connectionMaker);
 //		UserDao dao = new DaoFactory().userDao();
 		
-//		// @Configuration ¾î³ëÅ×ÀÌ¼Ç »ç¿ë½Ã AnnotationConfigApplicationContext ¸Þ¼Òµå¸¦ »ç¿ëÇÑ´Ù.
+//		// @Configuration ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ AnnotationConfigApplicationContext ï¿½Þ¼Òµå¸¦ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 //		ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
 //		UserDao dao = context.getBean("userDao", UserDao.class);
 
-		// XML ¼³Á¤ ÆÄÀÏ ÀÌ¿ë
+		// XML ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½
 		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
 		UserDao dao = context.getBean("userDao", UserDao.class);
 		
@@ -28,25 +27,25 @@ public class RunDao {
 		
 		User user = new User();
 		user.setId("wonseok" + strCounter);
-		user.setName("Á¶¿ø¼®" + strCounter);
+		user.setName("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" + strCounter);
 		user.setPasswd(strCounter);
 		
 		// add user
 		dao.add(user);
 		
-		System.out.println(user.toString() + " µî·Ï ¼º°ø");
+		System.out.println(user.toString() + " ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		
 		User user2 = new User();
 		user2 = dao.get(user.getId());
-		System.out.println(user2.toString() + " Á¶È¸ ¼º°ø");
+		System.out.println(user2.toString() + " ï¿½ï¿½È¸ ï¿½ï¿½ï¿½ï¿½");
 		
 		
 		if(!user.getName().equals(user2.getName())) {
-			System.out.println("Å×½ºÆ® ½ÇÆÐ(name)");
+			System.out.println("ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½(name)");
 		} else if(!user.getPasswd().equals(user2.getPasswd())) {
-			System.out.println("Å×½ºÆ® ½ÇÆÐ(password)");
+			System.out.println("ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½(password)");
 		} else {
-			System.out.println("Á¶È¸ Å×½ºÆ® ¼º°ø");
+			System.out.println("ï¿½ï¿½È¸ ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½");
 		}
 	}
 }
