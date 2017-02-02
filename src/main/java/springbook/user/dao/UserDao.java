@@ -49,16 +49,19 @@ public class UserDao {
 
 	public void add(User user) throws SQLException {
 //		Connection c = getConnection();
-		Connection c = dataSource.getConnection();
+//		Connection c = dataSource.getConnection();
+//		
+//		PreparedStatement ps = c.prepareStatement("insert into users(id, name, passwd) values(?, ?, ?) ");
+//		ps.setString(1, user.getId());
+//		ps.setString(2, user.getName());
+//		ps.setString(3, user.getPasswd());
+//		
+//		ps.executeUpdate();
+//		ps.close();
+//		c.close();		
 		
-		PreparedStatement ps = c.prepareStatement("insert into users(id, name, passwd) values(?, ?, ?) ");
-		ps.setString(1, user.getId());
-		ps.setString(2, user.getName());
-		ps.setString(3, user.getPasswd());
-		
-		ps.executeUpdate();
-		ps.close();
-		c.close();				
+		StatementStrategy st = new AddStatement(user);
+		jdbcContextWithStatementStrategy(st);
 	}
 	
 	public User get(String id) throws SQLException {
@@ -94,11 +97,41 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException {
-		Connection c = dataSource.getConnection();
-		PreparedStatement ps = c.prepareStatement("delete from users");
-		ps.executeUpdate();
-		ps.close();
-		c.close();
+		
+//		Connection c = null;
+//		PreparedStatement ps = null;
+//		
+//		try {
+//			c = dataSource.getConnection();
+//			ps = c.prepareStatement("delete from users");
+//			ps.executeUpdate();
+//		} catch (Exception e) {
+//			throw e;
+//		} finally {
+//			try { ps.close(); } catch (Exception e) {} 
+//			try { c.close(); } catch (Exception e) {} 
+//		}
+		
+//		Connection c = null;
+//		PreparedStatement ps = null;
+//		
+//		try {
+//			
+//			c = dataSource.getConnection();
+//			
+//			StatementStrategy st = new DeleteAllStatement();
+//			ps = st.makepreparedStatement(c);
+//			ps.executeUpdate();
+//			
+//		} catch (Exception e) {			
+//			throw e;
+//		} finally {
+//			try { if(ps != null) ps.close(); } catch (Exception e) {} 
+//			try { if(c != null) c.close(); } catch (Exception e) {} 
+//		}	
+		
+		StatementStrategy st = new DeleteAllStatement();
+		jdbcContextWithStatementStrategy(st);
 	}
 	
 	public int getCount() throws SQLException {
@@ -113,6 +146,24 @@ public class UserDao {
 		ps.close();
 		c.close();
 		return count;
+	}
+	
+	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
+		Connection c = null;
+		PreparedStatement ps = null;
+		
+		try {
+			
+			c = dataSource.getConnection();
+			ps = stmt.makepreparedStatement(c);
+			ps.executeUpdate();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			try { if(ps != null) ps.close(); } catch (Exception e) {} 
+			try { if(c != null) c.close(); } catch (Exception e) {} 
+		}
 	}
 
 }
