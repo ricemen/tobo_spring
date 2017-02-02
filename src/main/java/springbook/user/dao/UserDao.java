@@ -94,14 +94,15 @@ public class UserDao {
 //				}
 //		);
 		
-		System.out.println("jdbcContext : " + jdbcContext);
-		this.jdbcContext.workWithStatementStrategy(
-			new StatementStrategy() {  
-				public PreparedStatement makepreparedStatement(Connection c) throws SQLException {
-					return c.prepareStatement("delete from users");
-				}
-			}				
-		);
+//		this.jdbcContext.workWithStatementStrategy(
+//			new StatementStrategy() {  
+//				public PreparedStatement makepreparedStatement(Connection c) throws SQLException {
+//					return c.prepareStatement("delete from users");
+//				}
+//			}				
+//		);
+		
+		jdbcContext.executeSql("delete from users");
 	}
 	
 	public int getCount() throws SQLException {
@@ -128,6 +129,10 @@ public class UserDao {
 //		);
 	}
 	
+	
+	/*
+	 * not used
+	 */
 	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
 		Connection c = null;
 		PreparedStatement ps = null;
