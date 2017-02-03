@@ -21,7 +21,7 @@ public class RunDao {
 
 		// XML ���� ���� �̿�
 		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
-		UserDao dao = context.getBean("userDao", UserDao.class);
+		UserDaoJdbc dao = context.getBean("userDao", UserDaoJdbc.class);
 		
 		String strCounter = "13";
 		

@@ -18,8 +18,8 @@ public class DaoFactory {
 	}
 	
 	@Bean
-	public UserDao userDao() {
-		UserDao userDao = new UserDao();
+	public UserDaoJdbc userDao() {
+		UserDaoJdbc userDao = new UserDaoJdbc();
 //		userDao.setConnectionMaker(connectionMaker());
 		userDao.setDataSource(dataSource());
 		return userDao;

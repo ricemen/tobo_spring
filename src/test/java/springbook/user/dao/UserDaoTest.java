@@ -24,7 +24,7 @@ public class UserDaoTest {
 //	private ApplicationContext context;
 	
 	@Autowired
-	private UserDao dao;
+	private UserDaoJdbc dao;
 	
 	User user1;
 	User user2;
