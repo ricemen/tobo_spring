@@ -10,6 +10,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 public class UserDaoJdbc implements UserDao {
@@ -22,7 +23,14 @@ public class UserDaoJdbc implements UserDao {
 
 	public void add(User user) throws DuplicateKeyException {
 		// use jdbcTemplate
-		this.jdbcTemplate.update(" insert into users(id, name, passwd) values(?, ?, ?) ", user.getId(), user.getName(), user.getPasswd());
+		this.jdbcTemplate.update(" insert into users(id, name, passwd, level, login, recommend) values(?, ?, ?, ?, ?, ?) ", user.getId(), user.getName(), user.getPasswd(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
+	}
+	
+
+	public void update(User user) {
+		this.jdbcTemplate.update(
+			" update users set name = ?, passwd= ?, level =?, login =?, recommend =? where id= ? ", user.getName(), user.getPasswd(),user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId() 			
+		);
 	}
 	
 	public User get(String id) {
@@ -47,6 +55,9 @@ public class UserDaoJdbc implements UserDao {
 			user.setId(rs.getString("id"));
 			user.setName(rs.getString("name"));
 			user.setPasswd(rs.getString("passwd"));
+			user.setLevel(Level.valueOf(rs.getInt("level")));
+			user.setLogin(rs.getInt("login"));
+			user.setRecommend(rs.getInt("recommend"));
 			return user;
 		}
 	};
