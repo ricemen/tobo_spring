@@ -2,14 +2,11 @@ package springbook.user.service;
 
 import java.util.List;
 
-import javax.jws.soap.SOAPBinding.Use;
-
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 public class UserService {
-
 	UserDao userDao;
 	
 	public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
@@ -20,7 +17,7 @@ public class UserService {
 		this.userDao = userDao;
 	}
 	
-	public boolean canUpgradeLevel(User user) {
+	protected boolean canUpgradeLevel(User user) {
 		Level currentLevel = user.getLevel();
 		
 		switch(currentLevel) {
@@ -31,7 +28,7 @@ public class UserService {
 		}
 	}
 	
-	public void upgradeLevel(User user) {
+	protected void upgradeLevel(User user) {
 //		if(user.getLevel() == Level.BASIC) user.setLevel(Level.SILVER);
 //		else if(user.getLevel() == Level.SILVER) user.setLevel(Level.GOLD);
 //		userDao.update(user);
