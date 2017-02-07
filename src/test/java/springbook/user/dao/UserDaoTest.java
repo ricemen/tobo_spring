@@ -30,12 +30,11 @@ public class UserDaoTest {
 	
 	@Before
 	public void setUp() {
-		user1 = new User("wonseok1", "조원석1", "4321", Level.BASIC, 1, 0);
-		user2 = new User("wonseok2", "조원석2", "4321", Level.SILVER, 55, 10);
-		user3 = new User("wonseok3", "조원석3", "4321", Level.GOLD, 100, 40);
+		user1 = new User("wonseok1", "조원석1", "4321", "ricemen@gmail.com",  Level.BASIC, 1, 0);
+		user2 = new User("wonseok2", "조원석2", "4321", "ricemen@nate.com", Level.SILVER, 55, 10);
+		user3 = new User("wonseok3", "조원석3", "4321", "ricemen@naver.com", Level.GOLD, 100, 40);
 	}
 	
-	@Test
 	public void addAndGet() throws SQLException {
 		
 //		User user1 = new User("ricemen", "조원석", "1234");
@@ -57,12 +56,7 @@ public class UserDaoTest {
 		
 	}
 
-	@Test
 	public void count() throws SQLException {
-
-//		User user1 = new User("wonseok1", "조원석1", "4321");
-//		User user2 = new User("wonseok2", "조원석2", "4321");
-//		User user3 = new User("wonseok3", "조원석3", "4321");
 		
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));
@@ -87,6 +81,7 @@ public class UserDaoTest {
 		
 		user1.setName("이지은");
 		user1.setPasswd("12345");
+		user1.setEmail("ricemen@gmail.com");
 		user1.setLevel(Level.GOLD);
 		user1.setLogin(1000);
 		user1.setRecommend(999);
@@ -109,7 +104,6 @@ public class UserDaoTest {
 //		dao.get("unknow_id");
 	}
 	
-	@Test
 	public void getAll() throws SQLException {
 		dao.deleteAll();
 		dao.add(user1); // Id: gyumee
@@ -126,13 +120,14 @@ public class UserDaoTest {
 		assertThat(users3 .size() , is(3));
 		checkSameUser(user1 , users3.get(0)); 
 		checkSameUser(user2 , users3.get(1));
-		checkSameUser(user2, users3.get(2));
+		checkSameUser(user3, users3.get(2));
 	}
 
 	private void checkSameUser(User user1 , User user2) {
 		assertThat(user1.getId(), is(user2.getId()));
 		assertThat(user1.getName() , is(user2.getName()));
 		assertThat(user1.getPasswd(), is(user2.getPasswd()));
+		assertThat(user1.getEmail(), is(user2.getEmail()));
 		assertThat(user1.getLevel() , is(user2.getLevel()));
 		assertThat(user1.getLogin() , is(user2.getLogin()));
 		assertThat(user1.getRecommend() , is(user2.getRecommend()));

@@ -43,11 +43,11 @@ public class UserServiceTest {
 	@Before
 	public void setUp() {
 		users = Arrays.asList(
-			new User("wonseok1", "원석1", "p1", Level.BASIC, userService.MIN_LOGCOUNT_FOR_SILVER-1, 0),
-			new User("wonseok2", "원석2", "p2", Level.BASIC, userService.MIN_LOGCOUNT_FOR_SILVER, 0),
-			new User("wonseok3", "원석3", "p3", Level.SILVER, 60, userService.MIN_RECCOMENT_FOR_GOLD-1),
-			new User("wonseok4", "원석4", "p4", Level.SILVER, 60, userService.MIN_RECCOMENT_FOR_GOLD),
-			new User("wonseok5", "원석5", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
+			new User("wonseok1", "원석1", "p1", "ricemen@gmail.com", Level.BASIC, userService.MIN_LOGCOUNT_FOR_SILVER-1, 0),
+			new User("wonseok2", "원석2", "p2", "ricemen@naver.com", Level.BASIC, userService.MIN_LOGCOUNT_FOR_SILVER, 0),
+			new User("wonseok3", "원석3", "p3", "ricemen@nate.com", Level.SILVER, 60, userService.MIN_RECCOMENT_FOR_GOLD-1),
+			new User("wonseok4", "원석4", "p4", "wonseok.cho@postvisual.com", Level.SILVER, 60, userService.MIN_RECCOMENT_FOR_GOLD),
+			new User("wonseok5", "원석5", "p5", "ricemen@hanmail.com", Level.GOLD, 100, Integer.MAX_VALUE)
 		);
 	}
 	

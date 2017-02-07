@@ -19,20 +19,18 @@ public class UserDaoJdbc implements UserDao {
 
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		int i = 3;
 	}
-	
-	
 
 	public void add(User user) throws DuplicateKeyException {
 		// use jdbcTemplate
-		this.jdbcTemplate.update(" insert into users(id, name, passwd, level, login, recommend) values(?, ?, ?, ?, ?, ?) ", user.getId(), user.getName(), user.getPasswd(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
+		this.jdbcTemplate.update(" insert into users(id, name, passwd, email, level, login, recommend) values(?, ?, ?, ?, ?, ?, ?) ", user.getId(), user.getName(), user.getPasswd(), user.getEmail(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
 	}
 	
 
 	public void update(User user) {
 		this.jdbcTemplate.update(
-			" update users set name = ?, passwd= ?, level =?, login =?, recommend =? where id= ? ", user.getName(), user.getPasswd(),user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId() 			
+			" update users set name = ?, passwd= ?, email = ?, level =?, login =?, recommend =? where id= ? ",
+			user.getName(), user.getPasswd(), user.getEmail(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId() 			
 		);
 	}
 	
@@ -58,6 +56,7 @@ public class UserDaoJdbc implements UserDao {
 			user.setId(rs.getString("id"));
 			user.setName(rs.getString("name"));
 			user.setPasswd(rs.getString("passwd"));
+			user.setEmail(rs.getString("email"));
 			user.setLevel(Level.valueOf(rs.getInt("level")));
 			user.setLogin(rs.getInt("login"));
 			user.setRecommend(rs.getInt("recommend"));

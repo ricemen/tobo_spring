@@ -6,21 +6,24 @@ public class User {
 	String id;
 	String name;
 	String passwd;
+	String email;
 	int login;
 	int recommend;
 	
 	public User() {
 	}
-	
-	public User(String id, String name, String passwd, Level level, int login, int recommend) {
+
+	public User(String id, String name, String passwd, String email,Level level, int login, int recommend) {
 		super();
 		this.level = level;
 		this.id = id;
 		this.name = name;
 		this.passwd = passwd;
+		this.email = email;
 		this.login = login;
 		this.recommend = recommend;
 	}
+
 
 	public User(String id, String name, String passwd) {
 		this.id = id;
@@ -48,6 +51,14 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getPasswd() {
 		return passwd;
 	}
@@ -79,10 +90,11 @@ public class User {
 		}
 		
 	}
-	
+
 	@Override
 	public String toString() {
-		return "User [level=" + level + ", id=" + id + ", name=" + name + ", passwd=" + passwd + ", login=" + login
-				+ ", recommend=" + recommend + ", toString()=" + super.toString() + "]";
+		return "User [level=" + level + ", id=" + id + ", name=" + name + ", passwd=" + passwd + ", email=" + email
+				+ ", login=" + login + ", recommend=" + recommend + ", toString()=" + super.toString() + "]";
 	}
+	
 }
