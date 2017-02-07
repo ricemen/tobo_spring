@@ -19,7 +19,10 @@ public class UserDaoJdbc implements UserDao {
 
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		int i = 3;
 	}
+	
+	
 
 	public void add(User user) throws DuplicateKeyException {
 		// use jdbcTemplate
