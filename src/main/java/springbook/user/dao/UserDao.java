@@ -2,6 +2,8 @@ package springbook.user.dao;
 
 import java.util.List;
 
+import org.hamcrest.Matcher;
+
 import springbook.user.domain.User;
 
 public interface UserDao {

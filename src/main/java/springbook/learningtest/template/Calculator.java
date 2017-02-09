@@ -1,4 +1,4 @@
-package com.springbook.learningtest.template;
+package springbook.learningtest.template;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
