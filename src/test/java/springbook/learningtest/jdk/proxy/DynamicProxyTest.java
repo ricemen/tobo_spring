@@ -18,6 +18,7 @@ import org.springframework.aop.support.NameMatchMethodPointcut;
 
 
 public class DynamicProxyTest {
+	
 	@Test
 	public void simpleProxy() {
 		Hello hello = new HelloTarget();

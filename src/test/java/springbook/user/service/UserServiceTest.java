@@ -34,8 +34,9 @@ import springbook.user.domain.User;
 public class UserServiceTest {
 	
 	@Autowired UserService userService;
+	@Autowired UserService testUserService;
 	@Autowired UserDao userDao;
-	@Autowired UserServiceImpl UserServiceImpl;
+	//@Autowired UserServiceImpl UserServiceImpl;
 	@Autowired MailSender mailSender;
 	@Autowired PlatformTransactionManager transactionManager;
 	@Autowired ApplicationContext context;
@@ -127,9 +128,9 @@ public class UserServiceTest {
 	@DirtiesContext
 	public void upgradeAllOrNothing() throws Exception {
  
-		TestUserService testUserService = new TestUserService(users.get(3).getId());
-		testUserService.setUserDao(userDao);
-		testUserService.setMailSender(mailSender);
+//		TestUserService testUserService = new TestUserService(users.get(3).getId());
+//		testUserService.setUserDao(userDao);
+//		testUserService.setMailSender(mailSender);
 		
 //		TransactionHandler txHandler = new TransactionHandler();
 //		txHandler.setTarget(testUserService);
@@ -152,16 +153,16 @@ public class UserServiceTest {
 //		txProxyFaceoryBean.setTarget(testUserService);
 //		UserService txUserService = (UserService) txProxyFaceoryBean.getObject();
 		
-		ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-		txProxyFactoryBean.setTarget(testUserService);
-		UserService txUserService = (UserService) txProxyFactoryBean.getObject();
+//		ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
+//		txProxyFactoryBean.setTarget(testUserService);
+//		UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 		
 		userDao.deleteAll();
 		
 		for(User user : users) userDao.add(user);
 		
 		try {
-			txUserService.upgradeLevels();
+			testUserService.upgradeLevels();
 			fail("TestUserServiceException expected");
 			
 		}catch(TestUserServiceException e) {
@@ -270,12 +271,8 @@ public class UserServiceTest {
 	}
 	
 	
-	static class TestUserService extends UserServiceImpl {
-		private String id;
-		
-		private TestUserService(String id) {
-			this.id = id;
-		}
+	static class TestUserServiceImpl extends UserServiceImpl {
+		private String id = "wonseok4";
 
 		@Override
 		protected void upgradeLevel(User user) {

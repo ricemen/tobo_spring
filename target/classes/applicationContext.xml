@@ -11,6 +11,8 @@
 		<property name="password" value="" />
 	</bean>
 	
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>	
@@ -19,8 +21,15 @@
 		<property name="transactionManager" ref="transactionManager" />
 	</bean>
 	
+	<!-- 
 	<bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
 		<property name="mappedName" value="upgrade*" />
+	</bean>
+	 -->
+	 
+	<bean id="transactionPointcut" class="springbook.learningtest.jdk.proxy.NameMatchClassMethodPointcut">
+		<property name="mappedClassName" value="*ServiceImpl" />
+		<property name="mappedName" value="upgrade*" />		
 	</bean>
 	
 	
@@ -35,6 +44,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<!-- 
 	<bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target" ref="userServiceImpl" />
 		<property name="interceptorNames">
@@ -42,13 +52,16 @@
 				<value>transactionAdvisor</value>
 			</list>
 		</property>		
-	</bean>	
-	
+	</bean>
+	 -->	
 		
-	<bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
+	<bean id="userService" class="springbook.user.service.UserServiceImpl">
 		<property name="userDao" ref="userDao"></property>
 		<property name="mailSender" ref="mailSender"></property>
 	</bean>	 
+	
+	<bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserServiceImpl" parent="userService" />
+	
 	<!-- 
 	<bean id="userService" class="springbook.user.service.TxProxyFactoryBean">
 		<property name="target" ref="userServiceImpl" />
