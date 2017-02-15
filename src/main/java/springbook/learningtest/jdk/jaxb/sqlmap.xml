@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmap xmlns="http://www.example.org/sqlMap" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/sqlMap ../../../../../sqlmap.xsd ">
+	
+		<sql key="userAdd" value="insert into users(id, name, passwd, email, level, login, recommend) values(?,?,?,?,?,?,?)" />			
+		<sql key="userGet" value="select * from users where id = ?" />
+		<sql key="userGetAll" value="select * from users order by id" />
+		<sql key="userDeleteAll" value="delete from users" />
+		<sql key="userGetCount" value="select count(*) from users" />
+		<sql key="userUpdate" value="update users set name = ?, passwd = ?, email = ?, level = ?, login = ?, recommend = ? where id = ?"  />
+</sqlmap>

@@ -36,11 +36,9 @@ public class UserServiceTest {
 	@Autowired UserService userService;
 	@Autowired UserService testUserService;
 	@Autowired UserDao userDao;
-	//@Autowired UserServiceImpl UserServiceImpl;
 	@Autowired MailSender mailSender;
 	@Autowired PlatformTransactionManager transactionManager;
 	@Autowired ApplicationContext context;
-	
 	
 	List<User> users;
 
@@ -70,7 +68,7 @@ public class UserServiceTest {
 		User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
 		
 		assertThat(userWithLevelRead.getLevel(), is(userWithLevel.getLevel()));
-		assertThat(userWithoutLevelRead.getLevel(), is(userWithoutLevel.getLevel()));
+		assertThat(userWithoutLevelRead.getLevel(), is(Level.BASIC));
 		
 	}
 	
@@ -127,35 +125,6 @@ public class UserServiceTest {
 	@Test
 	@DirtiesContext
 	public void upgradeAllOrNothing() throws Exception {
- 
-//		TestUserService testUserService = new TestUserService(users.get(3).getId());
-//		testUserService.setUserDao(userDao);
-//		testUserService.setMailSender(mailSender);
-		
-//		TransactionHandler txHandler = new TransactionHandler();
-//		txHandler.setTarget(testUserService);
-//		txHandler.setTransactionManager(transactionManager);
-//		txHandler.setPattern("upgradeLevels");
-//		
-//		UserService txUserService = (UserService) Proxy.newProxyInstance(
-//			getClass().getClassLoader(), 
-//			new Class[] {UserService.class},
-//			txHandler
-//		);
-		
-//		
-//		UserServiceTx txUserService = new UserServiceTx();
-//		txUserService.setTransactionManager(transactionManager);
-//		txUserService.setUserService(testUserService);
-//		
-		
-//		TxProxyFactoryBean txProxyFaceoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
-//		txProxyFaceoryBean.setTarget(testUserService);
-//		UserService txUserService = (UserService) txProxyFaceoryBean.getObject();
-		
-//		ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-//		txProxyFactoryBean.setTarget(testUserService);
-//		UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 		
 		userDao.deleteAll();
 		
@@ -166,14 +135,12 @@ public class UserServiceTest {
 			fail("TestUserServiceException expected");
 			
 		}catch(TestUserServiceException e) {
-			
 		}
 		
 		checkLevelUpgraded(users.get(1), false);
 	}
 	
 	public void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
-		System.out.println(updated.toString());
 		assertThat(updated.getId(), is(expectedId));
 		assertThat(updated.getLevel(), is(expectedLevel));
 	}
@@ -195,6 +162,11 @@ public class UserServiceTest {
 	@Test
 	public void bean() {
 		assertThat(this.userService, is(notNullValue()));
+	}
+	
+	@Test
+	public void readOnlyTransactionAttriibute() {
+		this.testUserService.getAll();
 	}
 	
 	private void checkSameUser(User user1, User user2) {
@@ -270,16 +242,24 @@ public class UserServiceTest {
 		
 	}
 	
-	
-	static class TestUserServiceImpl extends UserServiceImpl {
-		private String id = "wonseok4";
-
-		@Override
+	static class TestUserService extends UserServiceImpl {
+		private String id = "wonseok4"; // users(3).getId()
+		
 		protected void upgradeLevel(User user) {
-			if(user.getId().equals(this.id)) throw new TestUserServiceException();
-			super.upgradeLevel(user);
+			System.out.println("ID : " + user.getId());
+			if (user.getId().equals(this.id)) throw new TestUserServiceException();  
+			super.upgradeLevel(user);  
+		}
+
+		public List<User> getAll() {
+			
+			for(User user : super.getAll()) {
+				super.update(user);
+			}
+			return null;
 		}
 	}
 	
-	static class TestUserServiceException extends RuntimeException {}
+	static class TestUserServiceException extends RuntimeException {
+	}
 }

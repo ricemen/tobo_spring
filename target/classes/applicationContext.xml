@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="org.h2.Driver" />
@@ -10,9 +13,41 @@
 		<property name="username" value="sa" />
 		<property name="password" value="" />
 	</bean>
+	<!-- 
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+	 -->
+	 
+	<!-- aop --> 
+	<aop:config>
+		<aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
+	</aop:config>
 	
+	<tx:advice id="transactionAdvice">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="*" />
+		</tx:attributes> 
+	</tx:advice>
+	
+	<!-- 
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 	
+	<bean id="transactionAdvice" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_REQUIRED , readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>				
+		</property>
+	</bean>
+	 -->
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>	
+		
+	<!-- 
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>	
@@ -21,27 +56,47 @@
 		<property name="transactionManager" ref="transactionManager" />
 	</bean>
 	
+	
+	<bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+		<property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))" />
+	</bean>	
+	
+	<bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="transactionAdvice" />
+		<property name="pointcut" ref="transactionPointcut" />
+	</bean>		
+	 -->
+	
 	<!-- 
 	<bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
 		<property name="mappedName" value="upgrade*" />
 	</bean>
-	 -->
+	 
 	 
 	<bean id="transactionPointcut" class="springbook.learningtest.jdk.proxy.NameMatchClassMethodPointcut">
 		<property name="mappedClassName" value="*ServiceImpl" />
 		<property name="mappedName" value="upgrade*" />		
 	</bean>
-	
-	
-	<bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
-		<property name="advice" ref="transactionAdvice" />
-		<property name="pointcut" ref="transactionPointcut" />
-	</bean>	
+	-->
 	
 	<!--  application components -->
 	
 	<bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
 		<property name="dataSource" ref="dataSource" />
+		<property name="sqlService" ref="sqlService" />
+	</bean>
+	
+	<bean id="sqlService" class="springbook.user.sqlservice.SimpleSqlService">
+		<property name="sqlMap">
+			<map>
+				<entry key="userAdd" value="insert into users(id, name, passwd, email, level, login, recommend) values(?,?,?,?,?,?,?)" />			
+				<entry key="userGet" value="select * from users where id = ?" />
+				<entry key="userGetAll" value="select * from users order by id" />
+				<entry key="userDeleteAll" value="delete from users" />
+				<entry key="userGetCount" value="select count(*) from users" />
+				<entry key="userUpdate" value="update users set name = ?, passwd = ?, email = ?, level = ?, login = ?, recommend = ? where id = ?"  />
+			</map>
+		</property>	
 	</bean>
 	
 	<!-- 
@@ -60,7 +115,7 @@
 		<property name="mailSender" ref="mailSender"></property>
 	</bean>	 
 	
-	<bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserServiceImpl" parent="userService" />
+	<bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserService" parent="userService" />
 	
 	<!-- 
 	<bean id="userService" class="springbook.user.service.TxProxyFactoryBean">
