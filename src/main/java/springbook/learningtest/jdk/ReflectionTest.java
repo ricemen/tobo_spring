@@ -17,7 +17,6 @@ public class ReflectionTest {
 		assertThat(name.length(), is(6));
 		
 		Method lengthMothod = String.class.getMethod("length");
-		assertThat(lengthMothod.invoke(name), is(6));
 		
 		assertThat(name.charAt(0), is('S'));
 		

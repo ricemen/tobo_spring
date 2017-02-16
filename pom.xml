@@ -17,6 +17,14 @@
 	</properties>
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-oxm -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-oxm</artifactId>
+		    <version>3.1.1.RELEASE</version>
+		</dependency>
+
+		
 		<!-- aspectj -->
 		<dependency>
 		  <groupId>org.aspectj</groupId>
