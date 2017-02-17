@@ -12,17 +12,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import springbook.user.config.TestApplicationContext;
+import springbook.user.config.AppContext;
+import springbook.user.config.SqlServiceContext;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles("test")
 //@ContextConfiguration(locations="/applicationContext.xml")
-@ContextConfiguration(classes=TestApplicationContext.class)
+@ContextConfiguration(classes=AppContext.class)
+@Import(SqlServiceContext.class)
 public class UserDaoTest {
+	
+	@Autowired
+	DefaultListableBeanFactory bf;
 
 	@Autowired
 	private UserDaoJdbc dao;
@@ -39,6 +48,12 @@ public class UserDaoTest {
 		user1 = new User("wonseok1", "조원석1", "4321", "ricemen@gmail.com",  Level.BASIC, 1, 0);
 		user2 = new User("wonseok2", "조원석2", "4321", "ricemen@nate.com", Level.SILVER, 55, 10);
 		user3 = new User("wonseok3", "조원석3", "4321", "ricemen@naver.com", Level.GOLD, 100, 40);
+	}
+	@Test
+	public void beans() {
+		for(String n : bf.getBeanDefinitionNames()) {
+			System.out.println(n + " \t" + bf.getBean(n).getClass().getName());
+		}
 	}
 	
 	@Test

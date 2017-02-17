@@ -4,7 +4,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,26 +18,35 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import springbook.user.config.TestApplicationContext;
+import springbook.user.config.AppContext;
+import springbook.user.config.SqlServiceContext;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations="/applicationContext.xml")
-@ContextConfiguration(classes=TestApplicationContext.class)
+@ActiveProfiles("test")
+@ContextConfiguration(classes=AppContext.class)
+@Import(SqlServiceContext.class)
 public class UserServiceTest {
+	
+	@Autowired
+	DefaultListableBeanFactory bf;
 	
 	@Autowired UserService userService;
 	@Autowired UserService testUserService;
@@ -53,6 +66,15 @@ public class UserServiceTest {
 			new User("wonseok4", "원석4", "p4", "wonseok.cho@postvisual.com", Level.SILVER, 60, UserServiceImpl.MIN_RECCOMENT_FOR_GOLD),
 			new User("wonseok5", "원석5", "p5", "ricemen@hanmail.com", Level.GOLD, 100, Integer.MAX_VALUE)
 		);
+	}
+	
+	@Test
+	public void beans() {
+		System.out.println("Begin=============================================");
+		for(String n : bf.getBeanDefinitionNames()) {
+			System.out.println(n + " \t" + bf.getBean(n).getClass().getName());
+		}
+		System.out.println("End=============================================");
 	}
 	
 	@Test
@@ -163,10 +185,11 @@ public class UserServiceTest {
 	
 	@Test
 	public void bean() {
+		System.out.println(this.userService);
 		assertThat(this.userService, is(notNullValue()));
 	}
 	
-	@Test
+	@Test(expected=TransientDataAccessResourceException.class)
 	public void readOnlyTransactionAttriibute() {
 		this.testUserService.getAll();
 	}

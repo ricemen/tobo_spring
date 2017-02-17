@@ -11,19 +11,28 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 import springbook.user.sqlservice.SqlService;
 
-@Component
+@Repository
 public class UserDaoJdbc implements UserDao {
 	
 	@Autowired
 	private SqlService sqlService;
 	
-	
 	private JdbcTemplate jdbcTemplate;
+	
+	public void setSqlService(SqlService sqlService) {
+		this.sqlService = sqlService;
+	}
+
+	public void setUserMapper(RowMapper<User> userMapper) {
+		this.userMapper = userMapper;
+	}
+
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
