@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,15 +15,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import springbook.user.config.TestApplicationContext;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="/applicationContext.xml")
+//@ContextConfiguration(locations="/applicationContext.xml")
+@ContextConfiguration(classes=TestApplicationContext.class)
 public class UserDaoTest {
 
 	@Autowired
 	private UserDaoJdbc dao;
+	
+	@Autowired
+	DataSource dataSource;
 	
 	User user1;
 	User user2;
@@ -35,6 +41,7 @@ public class UserDaoTest {
 		user3 = new User("wonseok3", "조원석3", "4321", "ricemen@naver.com", Level.GOLD, 100, 40);
 	}
 	
+	@Test
 	public void addAndGet() throws SQLException {
 		
 //		User user1 = new User("ricemen", "조원석", "1234");
@@ -56,6 +63,7 @@ public class UserDaoTest {
 		
 	}
 
+	@Test
 	public void count() throws SQLException {
 		
 		dao.deleteAll();
@@ -104,6 +112,7 @@ public class UserDaoTest {
 //		dao.get("unknow_id");
 	}
 	
+	@Test
 	public void getAll() throws SQLException {
 		dao.deleteAll();
 		dao.add(user1); // Id: gyumee

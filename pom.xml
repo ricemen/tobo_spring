@@ -17,6 +17,13 @@
 	</properties>
 	<dependencies>
 
+		<!--  CGLIB 2.2.2 -->
+		<dependency>
+		  <groupId>cglib</groupId>
+		  <artifactId>cglib</artifactId>
+		  <version>2.2.2</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-oxm -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
@@ -59,7 +66,7 @@
 		    <version>1.4</version>
 		</dependency>	
 
-		<!-- https://mvnrepository.com/artifact/net.sourceforge.cglib/com.springsource.net.sf.cglib -->
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.cglib/com.springsource.net.sf.cglib 
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
@@ -67,7 +74,7 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-			
+			-->
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
