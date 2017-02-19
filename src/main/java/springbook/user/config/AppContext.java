@@ -1,16 +1,22 @@
 package springbook.user.config;
 
 
+import java.sql.Driver;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.MailSender;
@@ -23,16 +29,29 @@ import springbook.user.service.DummyMailSender;
 import springbook.user.service.UserService;
 import springbook.user.service.UserServiceImpl;
 import springbook.user.service.UserServiceTest.TestUserService;
+import springbook.user.sqlservice.SqlMapConfig;
+import springbook.user.sqlservice.UserSqlMapConfig;
 
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages="springbook.user")
 @Import({SqlServiceContext.class, AppContext.TestAppContext.class, AppContext.ProductionAppContext.class})
 @PropertySource("/database.properties")
-public class AppContext {
+public class AppContext implements SqlMapConfig {
 	
-	@Autowired Environment env;
+	@Value("${db.driverClass}") Class<? extends Driver> driverClass;
+	@Value("${db.url}") String url;
+	@Value("${db.username}") String username;
+	@Value("${db.password}") String password;
+	
+//	@Autowired Environment env;
 	@Autowired UserDao userDao;
+	
+	
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
+	} 
 	
 	@Bean
 	public DataSource dataSource() {
@@ -43,15 +62,20 @@ public class AppContext {
 //		dataSource.setUsername("sa");
 //		dataSource.setPassword("");
 		
-		try {
-			dataSource.setDriverClass((Class<? extends java.sql.Driver>)Class.forName(env.getProperty("db.driverClass")));
-		} catch(ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+//		try {
+//			dataSource.setDriverClass((Class<? extends java.sql.Driver>)Class.forName(env.getProperty("db.driverClass")));
+//		} catch(ClassNotFoundException e) {
+//			throw new RuntimeException(e);
+//		}
+//		
+//		dataSource.setUrl(env.getProperty("db.url"));
+//		dataSource.setUsername(env.getProperty("db.username"));
+//		dataSource.setPassword(env.getProperty("db.password"));
 		
-		dataSource.setUrl(env.getProperty("db.url"));
-		dataSource.setUsername(env.getProperty("db.username"));
-		dataSource.setPassword(env.getProperty("db.password"));
+		dataSource.setDriverClass(this.driverClass);
+		dataSource.setUrl(this.url);
+		dataSource.setUsername(this.username);
+		dataSource.setPassword(this.password);
 		
 		return dataSource;
 	}
@@ -97,5 +121,10 @@ public class AppContext {
 		public MailSender mailSender() {
 			return new DummyMailSender();
 		}
+	}
+
+	@Override
+	public Resource getSqlMapResource() {
+		return new ClassPathResource("sqlmap.xml", UserDao.class);
 	}
 }
